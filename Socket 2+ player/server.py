@@ -1,64 +1,35 @@
-# import socket programming library
 import socket
- 
-# import thread module
 from _thread import *
-import threading
- 
-print_lock = threading.Lock()
- 
-# thread function
-def threaded(c):
+
+host = '192.168.0.6'
+port = 1233
+ThreadCount = 0
+
+def client_handler(connection):
+    connection.send(str.encode('You are now connected to the replay server... Type BYE to stop'))
     while True:
- 
-        # data received from client
-        data = c.recv(1024)
-        if not data:
-            print('Bye')
-             
-            # lock released on exit
-            print_lock.release()
+        data = connection.recv(2048)
+        message = data.decode('utf-8')
+        if message == 'BYE':
             break
- 
-        # reverse the given string from client
-        data = data[::-1]
- 
-        # send back reversed string to client
-        c.send(data)
- 
-    # connection closed
-    c.close()
- 
- 
-def Main():
-    host = "192.168.0.10"
- 
-    # reserve a port on your computer
-    # in our case it is 12345 but it
-    # can be anything
-    port = 12345
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((host, port))
-    print("socket binded to port", port)
- 
-    # put the socket into listening mode
-    s.listen(5)
-    print("socket is listening")
- 
-    # a forever loop until client wants to exit
+        reply = f'Server: {message}'
+        connection.sendall(str.encode(reply))
+    connection.close()
+
+def accept_connections(ServerSocket):
+    Client, address = ServerSocket.accept()
+    print('Connected to: ' + address[0] + ':' + str(address[1]))
+    start_new_thread(client_handler, (Client, ))
+
+def start_server(host, port):
+    ServerSocket = socket.socket()
+    try:
+        ServerSocket.bind((host, port))
+    except socket.error as e:
+        print(str(e))
+    print(f'Server is listing on the port {port}...')
+    ServerSocket.listen()
+
     while True:
- 
-        # establish connection with client
-        c, addr = s.accept()
- 
-        # lock acquired by client
-        print_lock.acquire()
-        print('Connected to :', addr[0], ':', addr[1])
- 
-        # Start a new thread and return its identifier
-        start_new_thread(threaded, (c,))
-    s.close()
- 
- 
-if __name__ == '__main__':
-    Main()
+        accept_connections(ServerSocket)
+start_server(host, port)
