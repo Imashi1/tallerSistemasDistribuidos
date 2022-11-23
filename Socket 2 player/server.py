@@ -2,7 +2,7 @@ import socket
 from _thread import *
 import sys
 
-server = "192.168.0.6"
+server = "192.168.0.10" #Cambiar por su ip local
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -12,7 +12,7 @@ try:
 except socket.error as e:
     str(e)
 
-s.listen(2)
+s.listen(3)
 print("Waiting for a connection, Server Started")
 
 def read_pos(str):

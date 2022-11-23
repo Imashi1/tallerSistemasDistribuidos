@@ -65,6 +65,7 @@ def main():
     startPos = read_pos(n.getPos())
     p = Player(startPos[0],startPos[1],100,100,(0,255,0))
     p2 = Player(0,0,100,100,(255,0,0))
+    p3 = Player(0,0,100,100,(0,0,255))
     clock = pygame.time.Clock()
 
     while run:
@@ -73,6 +74,10 @@ def main():
         p2.x = p2Pos[0]
         p2.y = p2Pos[1]
         p2.update()
+        p3Pos = read_pos(n.send(make_pos((p.x, p.y))))
+        p3.x = p2Pos[0]
+        p3.y = p2Pos[1]
+        p3.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
