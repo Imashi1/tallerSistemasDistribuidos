@@ -52,10 +52,11 @@ def make_pos(tup):
     return str(tup[0]) + "," + str(tup[1])
 
 
-def redrawWindow(win,player, player2):
+def redrawWindow(win,player, player2, player3):
     win.fill((255,255,255))
     player.draw(win)
     player2.draw(win)
+    player3.draw(win)
     pygame.display.update()
 
 
@@ -75,8 +76,8 @@ def main():
         p2.y = p2Pos[1]
         p2.update()
         p3Pos = read_pos(n.send(make_pos((p.x, p.y))))
-        p3.x = p2Pos[0]
-        p3.y = p2Pos[1]
+        p3.x = p3Pos[0]
+        p3.y = p3Pos[1]
         p3.update()
 
         for event in pygame.event.get():
@@ -85,6 +86,6 @@ def main():
                 pygame.quit()
 
         p.move()
-        redrawWindow(win, p, p2)
+        redrawWindow(win, p, p2, p3)
 
 main()

@@ -12,7 +12,7 @@ try:
 except socket.error as e:
     str(e)
 
-s.listen(3)
+s.listen()
 print("Waiting for a connection, Server Started")
 
 def read_pos(str):
@@ -25,6 +25,7 @@ def make_pos(tup):
 
 pos = [(0,0),(100,100)]
 
+#client_handler
 def threaded_client(conn, player):
     conn.send(str.encode(make_pos(pos[player])))
     reply = ""

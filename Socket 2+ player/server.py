@@ -2,9 +2,9 @@ import socket
 from _thread import *
 
 host = '192.168.0.6'
-port = 1233
+port = 8000
 ThreadCount = 0
-
+data = ''
 def client_handler(connection):
     connection.send(str.encode('You are now connected to the replay server... Type BYE to stop'))
     while True:
