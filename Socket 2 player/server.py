@@ -12,7 +12,7 @@ try:
 except socket.error as e:
     str(e)
 
-s.listen()
+s.listen(3)
 print("Waiting for a connection, Server Started")
 
 def read_pos(str):

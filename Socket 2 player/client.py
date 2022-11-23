@@ -63,7 +63,9 @@ def redrawWindow(win,player, player2, player3):
 def main():
     run = True
     n = Network()
+    print(n.getPos())
     startPos = read_pos(n.getPos())
+
     p = Player(startPos[0],startPos[1],100,100,(0,255,0))
     p2 = Player(0,0,100,100,(255,0,0))
     p3 = Player(0,0,100,100,(0,0,255))
