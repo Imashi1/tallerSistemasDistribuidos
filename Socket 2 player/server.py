@@ -1,9 +1,9 @@
 import socket
 from _thread import *
 import sys
-
-server = "192.168.0.10" #Cambiar por su ip local
-port = 5555
+#Cambiar por su ip local
+server = "192.168.0.6" 
+port = 8000
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -12,18 +12,18 @@ try:
 except socket.error as e:
     str(e)
 
-s.listen(3)
+s.listen(2)
 print("Waiting for a connection, Server Started")
 
 def read_pos(str):
     str = str.split(",")
-    return int(str[0]), int(str[1])
+    return int(str[0]), int(str[1]), int(str[2])
 
 
 def make_pos(tup):
-    return str(tup[0]) + "," + str(tup[1])
+    return str(tup[0]) + "," + str(tup[1]) + "," + str(tup[2])
 
-pos = [(0,0),(100,100)]
+pos = [(0,0),(100,100),(200,200)]
 
 #client_handler
 def threaded_client(conn, player):

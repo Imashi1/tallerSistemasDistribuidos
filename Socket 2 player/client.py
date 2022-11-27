@@ -45,11 +45,11 @@ class Player():
 
 def read_pos(str):
     str = str.split(",")
-    return int(str[0]), int(str[1])
+    return int(str[0]), int(str[1]), int(str[2])
 
 
 def make_pos(tup):
-    return str(tup[0]) + "," + str(tup[1])
+    return str(tup[0]) + "," + str(tup[1]) + "," + str(tup[2])
 
 
 def redrawWindow(win,player, player2, player3):
@@ -67,8 +67,8 @@ def main():
     startPos = read_pos(n.getPos())
 
     p = Player(startPos[0],startPos[1],100,100,(0,255,0))
-    p2 = Player(0,0,100,100,(255,0,0))
-    p3 = Player(0,0,100,100,(0,0,255))
+    p2 = Player(100,100,100,100,(255,0,0))
+    p3 = Player(200,200,100,100,(0,0,255))
     clock = pygame.time.Clock()
 
     while run:
@@ -77,7 +77,7 @@ def main():
         p2.x = p2Pos[0]
         p2.y = p2Pos[1]
         p2.update()
-        p3Pos = read_pos(n.send(make_pos((p.x, p.y))))
+        p3Pos = read_pos(n.send(make_pos((p2.x, p2.y))))
         p3.x = p3Pos[0]
         p3.y = p3Pos[1]
         p3.update()
