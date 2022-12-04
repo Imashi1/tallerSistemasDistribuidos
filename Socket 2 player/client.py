@@ -1,6 +1,5 @@
 import pygame
 from network import Network
-
 width = 500
 height = 500
 win = pygame.display.set_mode((width, height))
@@ -43,44 +42,49 @@ class Player():
         self.rect = (self.x, self.y, self.width, self.height)
 
 
-def read_pos(str):
-    str = str.split(",")
-    return int(str[0]), int(str[1]), int(str[2])
+def read_pos(hola):
+    string = hola.split(",")
+    return int(string[0]), int(string[1])
 
 
 def make_pos(tup):
-    return str(tup[0]) + "," + str(tup[1]) + "," + str(tup[2])
+    return str(tup[0]) + "," + str(tup[1])
 
 
-def redrawWindow(win,player, player2, player3):
+def redrawWindow(win,player, player2, player3 = None):
     win.fill((255,255,255))
     player.draw(win)
     player2.draw(win)
-    player3.draw(win)
+    #player3.draw(win)
     pygame.display.update()
+
+
 
 
 def main():
     run = True
     n = Network()
-    print(n.getPos())
     startPos = read_pos(n.getPos())
-
     p = Player(startPos[0],startPos[1],100,100,(0,255,0))
-    p2 = Player(100,100,100,100,(255,0,0))
-    p3 = Player(200,200,100,100,(0,0,255))
+    p2 = Player(300,300,100,100,(255,0,0))
+    #p3 = Player(500,500,100,100,(0,0,255))
     clock = pygame.time.Clock()
 
     while run:
         clock.tick(60)
+        #pygame.draw.rect(win,(0,255,0), (startPos[0], startPos[1],70,70))
         p2Pos = read_pos(n.send(make_pos((p.x, p.y))))
+        win.blit(win,p.rect)
+
         p2.x = p2Pos[0]
         p2.y = p2Pos[1]
         p2.update()
+        '''
         p3Pos = read_pos(n.send(make_pos((p2.x, p2.y))))
         p3.x = p3Pos[0]
         p3.y = p3Pos[1]
         p3.update()
+        '''
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -88,6 +92,6 @@ def main():
                 pygame.quit()
 
         p.move()
-        redrawWindow(win, p, p2, p3)
+        redrawWindow(win, p, p2)
 
 main()

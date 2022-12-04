@@ -1,4 +1,5 @@
 import socket
+import select
 from _thread import *
 
 host = '192.168.0.6'
@@ -14,6 +15,7 @@ def client_handler(connection):
             break
         reply = f'Server: {message}'
         connection.sendall(str.encode(reply))
+        broadcast(reply)
     connection.close()
 
 def accept_connections(ServerSocket):
