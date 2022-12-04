@@ -234,8 +234,8 @@ class ServerFTP():
 if __name__ == "__main__":
     # FTP SERVER SETUP
     
-    IP = '127.0.0.1'
-    PORT = 2330
+    IP = '192.168.0.15'
+    PORT = 8000
 
     server = ServerFTP(IP, PORT)
     

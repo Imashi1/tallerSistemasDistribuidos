@@ -1,9 +1,21 @@
+from network import Network
 import os, pygame, random
 #Class for the orange dude
+
+#Initialise pygame
+os.environ["SDL_VIDEO_CENTERED"] = "1"
+pygame.init()
+
+# Set up the display
+pygame.display.set_caption("Pilladas")
+win = pygame.display.set_mode((320, 240))
 class Player(object):
 
-    def __init__(self):
-        self.rect = pygame.Rect(32, 32, 16, 16)
+    def __init__(self, x, y, color):
+        self.x = x
+        self.y = y
+        self.color = color
+        self.rect =pygame.Rect(x, y, 16, 16)
 
     def move(self, dx, dy):
 
@@ -13,6 +25,9 @@ class Player(object):
         if dy != 0:
             self.move_single_axis(0, dy)
 
+    def update(self):
+        self.rect.x = self.x
+        self.rect.y = self.y
     def move_single_axis(self, dx, dy):
 
         #Move the rect
@@ -30,27 +45,18 @@ class Player(object):
                     self.rect.bottom = wall.rect.top
                 if dy < 0: # Moving up; Hit the bottom side of the wall
                     self.rect.top = wall.rect.bottom
-
 #Nice class to hold a wall rect
 class Wall(object):
 
     def __init__(self, pos):
         walls.append(self)
         self.rect = pygame.Rect(pos[0], pos[1], 16, 16)
+    
 
-#Initialise pygame
-os.environ["SDL_VIDEO_CENTERED"] = "1"
-pygame.init()
-
-# Set up the display
-pygame.display.set_caption("Get to the red square!")
-screen = pygame.display.set_mode((320, 240))
-
-clock = pygame.time.Clock()
 walls = [] # List to hold the walls
-player = Player() # Create the player
 
-# Holds the level layout in a list of strings.
+
+
 level = [
 "WWWWWWWWWWWWWWWWWWWW",
 "W                  W",
@@ -69,6 +75,15 @@ level = [
 "WWWWWWWWWWWWWWWWWWWW",
 ]
 
+
+
+clock = pygame.time.Clock()
+walls = [] # List to hold the walls
+#player = Player() # Create the player
+
+# Holds the level layout in a list of strings.
+
+
 #Parse the level string above. W = wall, E = exit
 x = y = 0
 for row in level:
@@ -81,9 +96,22 @@ for row in level:
     y += 16
     x = 0
 
+def read_pos(hola):
+    string = hola.split(",")
+    return int(string[0]), int(string[1])
+
+
+def make_pos(tup):
+    return str(tup[0]) + "," + str(tup[1])
+
+n = Network()
+posInicial = read_pos(n.getPos())
+player = Player(posInicial[0],posInicial[1],(0,0,255)) 
+player2 = Player(32,48,(0,255,255))
 running = True
 while running:
-
+    
+    print (posInicial)
     clock.tick(60)
 
     for e in pygame.event.get():
@@ -93,24 +121,44 @@ while running:
             running = False
 
     # Move the player if an arrow key is pressed
+    p2Pos = read_pos(n.send(make_pos((player.rect.x, player.rect.y))))
+    print(p2Pos)
+    player2.rect.x = p2Pos[0]
+    player2.rect.y = p2Pos[1]
+
+
+
     key = pygame.key.get_pressed()
     if key[pygame.K_LEFT]:
         player.move(-2, 0)
+        print(player.rect.x)
     if key[pygame.K_RIGHT]:
         player.move(2, 0)
     if key[pygame.K_UP]:
         player.move(0, -2)
     if key[pygame.K_DOWN]:
         player.move(0, 2)
-
+    
+    
     #Just added this to make it slightly fun ;)
-    if player.rect.colliderect(end_rect):
-        raise SystemExit("You win!")
+    #if player.rect.colliderect(end_rect):
+    #    raise SystemExit("You win!")
+
+    if player.rect.colliderect(player2.rect):
+        print('holaaaaaa')
+        color_a_pasar = player2.color
+        player2.color = player.color
+        player.color = color_a_pasar
+    elif player2.rect.colliderect(player.rect):
+        color_a_pasar2 = player.color
+        player.color = player2.color
+        player2.color = color_a_pasar2
 
     #Draw the scene
-    screen.fill((0, 0, 0))
+    win.fill((0, 0, 0))
     for wall in walls:
-        pygame.draw.rect(screen, (255, 255, 255), wall.rect)
-    pygame.draw.rect(screen, (255, 0, 0), end_rect)
-    pygame.draw.rect(screen, (255, 200, 0), player.rect)
+        pygame.draw.rect(win, (255, 255, 255), wall.rect)
+    pygame.draw.rect(win, (255, 0, 0), end_rect)
+    pygame.draw.rect(win, player.color, player.rect)
+    pygame.draw.rect(win, player2.color, player2.rect)
     pygame.display.flip()

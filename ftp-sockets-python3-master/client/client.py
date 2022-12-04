@@ -151,7 +151,7 @@ class ClientFTP:
 
 if __name__ == "__main__":
 
-    client = ClientFTP('127.0.0.1', 2350)
+    client = ClientFTP('192.168.0.15', 8000)
 
     print("\nFTP Client \n")
 
