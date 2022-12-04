@@ -7,7 +7,7 @@ import struct
 print ("\nWelcome to the FTP server.\n\nTo get started, connect a client.")
 
 # Initialise socket stuff
-TCP_IP = "192.168.0.15" # Only a local server
+TCP_IP = "192.168.0.11" # Only a local server
 TCP_PORT = 8000 # Just a random choice
 BUFFER_SIZE = 1024 # Standard size
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
