@@ -59,31 +59,24 @@ class VentanaPrincipal(tk.Tk):
         self.etiqueta_nombre.config(
             text="Ingresaste el nombre: " + nombre
         )
-        
+
         cone = self.abrir(nombre, password)
         cursor = cone.cursor()
         sql = "select * from estudiantes where id=21"
         cursor.execute(sql)
         return cursor.fetchall()
 
+
     def abrir(self, user, password):
         try:
             conexion = mariadb.connect(user=user,
-                                    password=password,
-                                    host="186.64.121.140",
-                                    database="utrack")
+                                       password=password,
+                                       host="186.64.121.140",
+                                       database="utrack")
             return conexion
         except KeyError as e:
             print(e)
-            
 
-    def listar(self):
-        respuesta = self.nombre_ingresado()
-        self.scrolledtext1.delete("1.0", tk.END)
-        for fila in respuesta:
-            self.scrolledtext1.insert(self, "código:"+str(fila[0]) +
-                                              "\ndescripción:"+fila[1] +
-                                              "\nprecio:"+str(fila[2])+"\n\n")
 
 
 ventana_principal = VentanaPrincipal()
