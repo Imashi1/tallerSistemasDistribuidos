@@ -1,48 +1,50 @@
 import socket
 import _thread
-from player import player
+from player import Player
 import pickle
 
-server = "192.168.1.41"
-port = 5555
 
-sckt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+class Server:
+    def __init__(self):
+        self.server = "192.168.1.92"
+        self.port = 8000
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.listaJugadores = []
 
-players = [player(0, 0, 50, 50, (255, 0, 0)), player(0, 0, 50, 50, (0, 0, 255))]
-
-try:
-    sckt.bind((server, port))
-except socket.error as error:
-    print(str(error))
-
-sckt.listen(2)
-print("Waiting for a connection, Server Started")
-
-def threadedClient(conn, player):
-    conn.send(pickle.dumps(players[player]))
-    reply = ""
-    while True:
+    def bindServer(self):
         try:
-            data = pickle.loads(conn.recv(2048))
-            players[player] = data 
-            if not data:
-                print("Disconnected")
+            self.socket.bind((self.server, self.port))
+        except self.socket.error as e:
+            print(str(e))
+
+        self.socket.listen(2)
+        print("Servidor Inicializado")
+
+    def threadedClient(self,conn, player):
+        conn.send(pickle.dumps("recibido"))
+        reply = ""
+        self.listaJugadores = [Player(self, 192, 160, 'red')]
+        while True:
+            try:
+                
+                conn.sendall(pickle.dumps(reply))
+            except:
                 break
-            else:
-                if player == 1:
-                    reply = players[0]
-                else:
-                    reply = players[1]
-            conn.sendall(pickle.dumps(reply))
-        except:
-            break
-    print("Lost connection")
-    conn.close()
+        print("Lost connection")
+        conn.close()
 
-currentPlayer = 0
-while True:
-    conn, addr = sckt.accept()
-    print("Connected to:", addr)
+    currentPlayer = 0
 
-    _thread.start_new_thread(threadedClient, (conn, currentPlayer))
-    currentPlayer += 1
+    def run(self):
+        self.bindServer()
+        while True:
+            conn, addr = self.socket.accept()
+            print("Connected to:", addr)
+            _thread.start_new_thread(
+                self.threadedClient, (self,conn, currentPlayer))
+            currentPlayer += 1
+
+
+if __name__ == '__main__':
+    server = Server()
+    server.run()

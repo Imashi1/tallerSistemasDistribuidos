@@ -1,4 +1,5 @@
 from network import Network
+from player import Player
 import os
 import pygame
 import random
@@ -14,73 +15,22 @@ pygame.display.set_caption("Pilladas")
 win = pygame.display.set_mode((416, 368))
 
 
-class Player(object):
-
-    def __init__(self, x, y, color):
-        self.x = x
-        self.y = y
-        self.color = color
-        self.rect = pygame.Rect(x, y, 16, 16)
-
-    def endmap(self):
-        if self.rect.x == 416:
-            self.rect = pygame.Rect(0, 160, 16, 16)
-            pygame.draw.rect(win, self.color, self.rect)
-        if self.rect.x == -16:
-            self.rect = pygame.Rect(416, 160, 16, 16)
-            pygame.draw.rect(win, self.color, self.rect)
-
-    def update(self):
-        self.endmap()
-
-    def collision(self, player, blueTeam, redTeam):
-        blueTeam.remove(player)
-        redTeam.append(player)
-        player.x, player.y = POS_START
-        player.rect = pygame.Rect(player.x, player.y, 16, 16)
-        pygame.draw.rect(win, player.color, player.rect)
-
-    def move(self, dx, dy):
-
-        # Move each axis separately. Note that this checks for collisions both times.
-        if dx != 0:
-            self.move_single_axis(dx, 0)
-        if dy != 0:
-            self.move_single_axis(0, dy)
-
-    def move_single_axis(self, dx, dy):
-
-        # Move the rect
-        self.rect.x += dx
-        self.rect.y += dy
-
-        # If you collide with a wall, move out based on velocity
-        for wall in walls:
-            if self.rect.colliderect(wall.rect):
-                if dx > 0:  # Moving right; Hit the left side of the wall
-                    self.rect.right = wall.rect.left
-                if dx < 0:  # Moving left; Hit the right side of the wall
-                    self.rect.left = wall.rect.right
-                if dy > 0:  # Moving down; Hit the top side of the wall
-                    self.rect.bottom = wall.rect.top
-                if dy < 0:  # Moving up; Hit the bottom side of the wall
-                    self.rect.top = wall.rect.bottom
 # Nice class to hold a wall rect
 
 
-class Power(object):
-    def __init__(self, x, y, color):
-        self.x = x
-        self.y = y
-        self.color = color
-        self.rect = pygame.Rect(x, y, 16, 16)
+# class Power(object):
+#     def __init__(self, x, y, color):
+#         self.x = x
+#         self.y = y
+#         self.color = color
+#         self.rect = pygame.Rect(x, y, 16, 16)
 
-    def devolverJugador(self, blueTeam, redTeam):
-        redPlayer = random.choice(blueTeam)
-        redPlayer.rect = pygame.Rect(192, 272, 16, 16)
-        pygame.draw.rect(win, 'blue', redPlayer.rect)
-        redTeam.remove(redTeam)
-        blueTeam.append(redPlayer)
+#     def devolverJugador(self, blueTeam, redTeam):
+#         redPlayer = random.choice(blueTeam)
+#         redPlayer.rect = pygame.Rect(192, 272, 16, 16)
+#         pygame.draw.rect(win, 'blue', redPlayer.rect)
+#         redTeam.remove(redTeam)
+#         blueTeam.append(redPlayer)
 
 
 class Wall(object):
@@ -144,10 +94,10 @@ for row in level:
 
 n = Network()
 p = n.getP()
-player = Player(192, 160, 'red')  # CENTRO
-player2 = Player(192, 272, 'blue')
-player3 = Player(192, 336, 'blue')
-player4 = Player(16, 32, 'blue')
+player = Player(win, 192, 160, 'red')  # CENTRO
+player2 = Player(win, 192, 272, 'blue')
+player3 = Player(win, 192, 336, 'blue')
+player4 = Player(win, 16, 32, 'blue')
 # power = Power(32, 160, (255, 182, 120))
 blueTeam = [player2, player3, player4]
 redTeam = [player]
@@ -172,14 +122,14 @@ while running:
 
     key = pygame.key.get_pressed()
     if key[pygame.K_LEFT]:
-        player.move(-2, 0)
+        player.move(-2, 0, walls)
         # print(player.rect.x)
     if key[pygame.K_RIGHT]:
-        player.move(2, 0)
+        player.move(2, 0, walls)
     if key[pygame.K_UP]:
-        player.move(0, -2)
+        player.move(0, -2, walls)
     if key[pygame.K_DOWN]:
-        player.move(0, 2)
+        player.move(0, 2, walls)
 
     # Just added this to make it slightly fun ;)
     if len(blueTeam) == 0:
@@ -188,7 +138,7 @@ while running:
     for bluePlayer in blueTeam:
         if player.rect.colliderect(bluePlayer):
             setattr(bluePlayer, "color", 'red')
-            player.collision(bluePlayer, blueTeam, redTeam)
+            player.collision(win, bluePlayer, blueTeam, redTeam)
     # for bluePlayer in blueTeam:
     #     if bluePlayer.rect.colliderect(power):
     #         power.devolverJugador(blueTeam, redTeam)

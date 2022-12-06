@@ -3,9 +3,8 @@ from zlib import decompress
 
 import pygame
 
-WIDTH = 1900
-HEIGHT = 1000
-
+WIDTH = 1024	
+HEIGHT = 576
 
 def recvall(conn, length):
     """ Retreive all pixels. """
@@ -17,6 +16,7 @@ def recvall(conn, length):
             return data
         buf += data
     return buf
+
 
 
 def main(host="192.168.1.92", port=5555):
@@ -41,8 +41,8 @@ def main(host="192.168.1.92", port=5555):
             pixels = decompress(recvall(sock, size))
 
             # Create the Surface from raw pixels
-            img = pygame.image.fromstring(pixels, (WIDTH, HEIGHT), 'RGB')
-
+            img = pygame.image.fromstring(pixels, (1920, 1080), 'RGB')
+            img = pygame.transform.scale(img, (WIDTH, HEIGHT))
             # Display the picture
             screen.blit(img, (0, 0))
             pygame.display.flip()
