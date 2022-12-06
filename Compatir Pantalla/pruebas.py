@@ -1,13 +1,35 @@
-import re
-import socket
-import tkinter as tk
+from tkinter import *
+from tkinter import ttk
+from socket import *
+import threading
+                                         
+def connect(): 
+    global connectionSocket 
+ 
+    serverPort = 12345
+    socketServer = socket(AF_INET, SOCK_STREAM)
+    socketServer.bind(('',serverPort))
+    socketServer.listen(1) 
+    print('The server is ready to receive') 
+    
+    while True:    
+        connectionSocket, addr = socketServer.accept()
+        connectionSocket.close()
+        break
+    s=0
 
+def connectit():
+    global s
+    if (s==0):
+        t = threading.Thread(target=connect)
+        t.start()
+        s = 1
+s = 0
+root = Tk()
+root.title("Server App")
+    
+button_connect = ttk.Button(root,text = 'Connect', width = 20, command = connectit)
 
-import subprocess
-test = subprocess.Popen(["ipconfig"], stdout=subprocess.PIPE)
-output = test.communicate()[0]
-
-# print(output)
-x = re.findall("IPv4 Address\.+[1-9]", str(output))
-
-print(x[0])
+button_connect.grid(row = 0, column = 0) 
+            
+root.mainloop()
