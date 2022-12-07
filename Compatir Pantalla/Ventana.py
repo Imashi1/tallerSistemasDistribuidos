@@ -33,29 +33,16 @@ def verPantalla(ip, puerto):
                     running = False
                     break
 
-<<<<<<< Updated upstream
-            # El tamaño de la longitud de píxeles, la longitud de los píxeles y los píxeles
-=======
-            # Captura los pixeles
->>>>>>> Stashed changes
+            # Captura el tamaño y tamaño de pixeles
             size_len = int.from_bytes(sock.recv(1), byteorder='big')
             size = int.from_bytes(sock.recv(size_len), byteorder='big')
             pixels = decompress(recvall(sock, size))
 
-<<<<<<< Updated upstream
-            # Crear la superficie a partir de píxeles en bruto
+            # Crea la superficie
             img = pygame.image.fromstring(pixels, (1920, 1080), 'RGB')
-            img = pygame.transform.scale(img, (WIDTH, HEIGHT))
-            # Muestra el screen
-=======
-            # Crea la Superficie para depositar los pixeles capturados
-            img = pygame.image.fromstring(pixels, (1920, 1080), 'RGB')
-
-            #Reescala la imagen parase aprecie de mejor forma
             img = pygame.transform.scale(img, (ANCHO, ALTO))
-            
-            # Muestra la imagen
->>>>>>> Stashed changes
+
+            # Muestra la pantalla (screen)
             screen.blit(img, (0, 0))
             pygame.display.flip()
             clock.tick(60)
