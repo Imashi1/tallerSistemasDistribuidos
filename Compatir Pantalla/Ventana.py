@@ -1,4 +1,3 @@
-import customtkinter
 import customtkinter as ctk
 import pygame
 from zlib import decompress
@@ -58,6 +57,7 @@ ctk.set_default_color_theme("dark-blue")
 
 # Definimos la pantalla root y su tamanaho
 root = ctk.CTk()
+root.title('Compartir Pantalla')
 root.geometry("500x350")
 
 # Pantalla de inicio
@@ -65,7 +65,7 @@ frame = ctk.CTkFrame(master=root)
 frame.pack(pady=20, padx=60, fill="both", expand=True)
 
 label = ctk.CTkLabel(
-    master=frame, text="Screen Sharing", font=("Roboto", 24))
+    master=frame, text="Compartir Pantalla", font=("Roboto", 24))
 label.pack(pady=12, padx=10)
 
 ip = ctk.CTkEntry(master=frame, placeholder_text="Ingresa la IP")
