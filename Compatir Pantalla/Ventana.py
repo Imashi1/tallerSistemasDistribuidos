@@ -1,9 +1,10 @@
+import customtkinter
 import customtkinter as ctk
 import pygame
 from zlib import decompress
 import socket
 
-WIDTH, HEIGHT = 1024, 576
+ANCHO, ALTO = 1024, 576
 
 
 def recvall(conn, length):
@@ -19,33 +20,49 @@ def recvall(conn, length):
 def verPantalla(ip, puerto):
     pygame.init()
 
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((ANCHO, ALTO))
     clock = pygame.time.Clock()
-    watching = True
+    running = True
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((ip.get(), int(puerto.get())))
     try:
-        while watching:
+        while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    watching = False
+                    running = False
                     break
 
+<<<<<<< Updated upstream
             # El tamaño de la longitud de píxeles, la longitud de los píxeles y los píxeles
+=======
+            # Captura los pixeles
+>>>>>>> Stashed changes
             size_len = int.from_bytes(sock.recv(1), byteorder='big')
             size = int.from_bytes(sock.recv(size_len), byteorder='big')
             pixels = decompress(recvall(sock, size))
 
+<<<<<<< Updated upstream
             # Crear la superficie a partir de píxeles en bruto
             img = pygame.image.fromstring(pixels, (1920, 1080), 'RGB')
             img = pygame.transform.scale(img, (WIDTH, HEIGHT))
             # Muestra el screen
+=======
+            # Crea la Superficie para depositar los pixeles capturados
+            img = pygame.image.fromstring(pixels, (1920, 1080), 'RGB')
+
+            #Reescala la imagen parase aprecie de mejor forma
+            img = pygame.transform.scale(img, (ANCHO, ALTO))
+            
+            # Muestra la imagen
+>>>>>>> Stashed changes
             screen.blit(img, (0, 0))
             pygame.display.flip()
             clock.tick(60)
     finally:
         sock.close()
+        pygame.quit()
+        root.destroy()
 
 
 # definimos la apariencia y tema
