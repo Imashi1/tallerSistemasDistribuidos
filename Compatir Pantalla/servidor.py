@@ -9,7 +9,7 @@ HEIGHT = 1080
 
 
 
-def capturar_pantallazo(conn):
+def capturar_pantalla(conn):
     #Captura de pantallazos continuos
     with mss() as sct:
         #Región a tomar capturas
