@@ -32,15 +32,15 @@ def verPantalla(ip, puerto):
                     watching = False
                     break
 
-            # Retreive the size of the pixels length, the pixels length and pixels
+            # El tamaño de la longitud de píxeles, la longitud de los píxeles y los píxeles
             size_len = int.from_bytes(sock.recv(1), byteorder='big')
             size = int.from_bytes(sock.recv(size_len), byteorder='big')
             pixels = decompress(recvall(sock, size))
 
-            # Create the Surface from raw pixels
+            # Crear la superficie a partir de píxeles en bruto
             img = pygame.image.fromstring(pixels, (1920, 1080), 'RGB')
             img = pygame.transform.scale(img, (WIDTH, HEIGHT))
-            # Display the picture
+            # Muestra el screen
             screen.blit(img, (0, 0))
             pygame.display.flip()
             clock.tick(60)
@@ -61,7 +61,7 @@ frame = ctk.CTkFrame(master=root)
 frame.pack(pady=20, padx=60, fill="both", expand=True)
 
 label = ctk.CTkLabel(
-    master=frame, text="Screen Sharing", text_font=("Roboto", 24))
+    master=frame, text="Screen Sharing", font=("Roboto", 24))
 label.pack(pady=12, padx=10)
 
 ip = ctk.CTkEntry(master=frame, placeholder_text="Ingresa la IP")
@@ -71,7 +71,7 @@ puerto = ctk.CTkEntry(
     master=frame, placeholder_text="Ingresa el puerto")
 puerto.pack(pady=12, padx=10)
 
-button = ctk.CTkButton(master=frame, text="Login",
+button = ctk.CTkButton(master=frame, text="Entar",
                        command=lambda: verPantalla(ip, puerto))
 button.pack(pady=12, padx=10)
 
