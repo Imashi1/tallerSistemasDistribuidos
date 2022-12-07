@@ -7,6 +7,7 @@ ANCHO, ALTO = 1024, 576
 
 
 def recvall(conn, length):
+    #Captura los pixeles
     buf = b''
     while len(buf) < length:
         data = conn.recv(length - len(buf))
