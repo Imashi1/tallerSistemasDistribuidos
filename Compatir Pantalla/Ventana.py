@@ -71,7 +71,7 @@ puerto = ctk.CTkEntry(
     master=frame, placeholder_text="Ingresa el puerto")
 puerto.pack(pady=12, padx=10)
 
-button = ctk.CTkButton(master=frame, text="Entar",
+button = ctk.CTkButton(master=frame, text="Entrar",
                        command=lambda: verPantalla(ip, puerto))
 button.pack(pady=12, padx=10)
 
