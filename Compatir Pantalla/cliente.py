@@ -1,14 +1,12 @@
-import socket
-from zlib import decompress
-
+import customtkinter as ctk
 import pygame
+from zlib import decompress
+import socket
 
-WIDTH = 1024	
-HEIGHT = 576
+ANCHO, ALTO = 1024, 576
+
 
 def recvall(conn, length):
-    """ Retreive all pixels. """
-
     buf = b''
     while len(buf) < length:
         data = conn.recv(length - len(buf))
@@ -18,38 +16,68 @@ def recvall(conn, length):
     return buf
 
 
-
-def main(host="192.168.1.92", port=5555):
+def verPantalla(ip, puerto):
     pygame.init()
 
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((ANCHO, ALTO))
     clock = pygame.time.Clock()
-    watching = True
+    running = True
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect((host, port))
+    sock.connect((ip.get(), int(puerto.get())))
     try:
-        while watching:
+        while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    watching = False
+                    running = False
                     break
 
-            # Retreive the size of the pixels length, the pixels length and pixels
+            # Captura el tamaño y tamaño de pixeles
             size_len = int.from_bytes(sock.recv(1), byteorder='big')
             size = int.from_bytes(sock.recv(size_len), byteorder='big')
             pixels = decompress(recvall(sock, size))
 
-            # Create the Surface from raw pixels
+            # Crea la superficie
             img = pygame.image.fromstring(pixels, (1920, 1080), 'RGB')
-            img = pygame.transform.scale(img, (WIDTH, HEIGHT))
-            # Display the picture
+            img = pygame.transform.scale(img, (ANCHO, ALTO))
+
+            # Muestra la pantalla (screen)
             screen.blit(img, (0, 0))
             pygame.display.flip()
             clock.tick(60)
     finally:
         sock.close()
+        pygame.quit()
+        root.destroy()
 
 
-if __name__ == '__main__':
-    main()
+# definimos la apariencia y tema
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("dark-blue")
+
+# Definimos la pantalla root y su tamanaho
+root = ctk.CTk()
+root.title('Compartir Pantalla')
+root.geometry("500x350")
+
+# Pantalla de inicio
+frame = ctk.CTkFrame(master=root)
+frame.pack(pady=20, padx=60, fill="both", expand=True)
+
+label = ctk.CTkLabel(
+    master=frame, text="Compartir Pantalla", font=("Roboto", 24))
+label.pack(pady=12, padx=10)
+
+ip = ctk.CTkEntry(master=frame, placeholder_text="Ingresa la IP")
+ip.pack(pady=12, padx=10)
+
+puerto = ctk.CTkEntry(
+    master=frame, placeholder_text="Ingresa el puerto")
+puerto.pack(pady=12, padx=10)
+
+button = ctk.CTkButton(master=frame, text="Entrar",
+                       command=lambda: verPantalla(ip, puerto))
+button.pack(pady=12, padx=10)
+
+
+root.mainloop()
