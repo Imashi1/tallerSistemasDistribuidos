@@ -42,7 +42,7 @@ def main():
         while 'connected':
             conn, addr = sock.accept()
             print('Cliente Conectado con Socket:', addr)
-            thread = Thread(target=capturar_pantallazo, args=(conn,))
+            thread = Thread(target=capturar_pantalla, args=(conn,))
             thread.start()
     finally:
         sock.close()
